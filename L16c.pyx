@@ -1,4 +1,4 @@
-def L16c(str text, list sb_list):
+def L16c(str text, list sb_list, str txend):
 	cdef dict data = {}
 
 	cdef str word = ""
@@ -8,24 +8,25 @@ def L16c(str text, list sb_list):
 	cdef str i, rw, lsb, lsbt, rsb, rsbt
 	cdef int n, old_a, rs
 
-	for i in text:
+	for i in text + txend:
 		if osb == i:
 			word += i
 			lw += 1
 			osbm = 1
 		else:
-			if osbm: 
-				if i in sb_list:
+			if i not in sb_list:
+				if osbm and lw > 2: 
 					if word[0] == word[-1]: word += word[-1]
 					else: word += i
 					if word not in data: data[word] = 1
 					else: data[word] = data[word] + 1
 					word = ""
 					lw = 0
+				word += i
+				lw += 1
 
-			if i in sb_list:
-				if word not in data:
-  
+			else:
+				if word not in data: 
 					rw = ""
 					
 					if lw > 6:
@@ -53,9 +54,7 @@ def L16c(str text, list sb_list):
 				else: data[word] = data[word] + 1
 				word = ""
 				lw = 0
-			else: 
-				word += i
-				lw += 1
+				
 			osbm = 0
 		osb = i
 
